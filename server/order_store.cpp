@@ -1,8 +1,8 @@
 #include "order_store.hpp"
 
 #include <algorithm>
+#include <cstdio>
 #include <ctime>
-#include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <sstream>
@@ -83,12 +83,10 @@ bool OrderStore::set_status(int id, OrderStatus status) {
 }
 
 void OrderStore::load() {
-    if (file_path_.empty() || !std::filesystem::exists(file_path_)) return;
+    if (file_path_.empty()) return;
 
     std::ifstream in(file_path_);
-    if (!in) {
-        throw std::runtime_error("Не удалось открыть файл заказов: " + file_path_);
-    }
+    if (!in) return;  // файла ещё нет: начинаем с пустого списка заказов
     const auto data = nlohmann::json::parse(in);
     orders_ = data.at("orders").get<std::vector<Order>>();
     for (const auto& order : orders_) {
@@ -109,7 +107,13 @@ void OrderStore::save() const {
         }
         out << nlohmann::json{{"orders", orders_}}.dump(2);
     }
-    std::filesystem::rename(temp_path, file_path_);
+#ifdef _WIN32
+    // На Windows rename не заменяет существующий файл, поэтому удаляем его сначала.
+    std::remove(file_path_.c_str());
+#endif
+    if (std::rename(temp_path.c_str(), file_path_.c_str()) != 0) {
+        throw std::runtime_error("Не удалось сохранить файл заказов: " + file_path_);
+    }
 }
 
 }  // namespace water

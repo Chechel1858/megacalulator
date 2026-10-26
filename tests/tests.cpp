@@ -2,7 +2,6 @@
 // Запуск: ctest --test-dir build   или   build/water_tests
 
 #include <cstdio>
-#include <filesystem>
 #include <iostream>
 #include <string>
 
@@ -146,8 +145,8 @@ void test_store_in_memory() {
 }
 
 void test_store_persistence() {
-    const auto path = (std::filesystem::temp_directory_path() / "water_orders_test.json").string();
-    std::filesystem::remove(path);
+    const std::string path = "water_orders_test.json";
+    std::remove(path.c_str());
 
     const Catalog catalog = Catalog::default_catalog();
     Order draft;
@@ -168,7 +167,7 @@ void test_store_persistence() {
     // Нумерация продолжается после перезапуска.
     CHECK(reloaded.add(draft).id == 3);
 
-    std::filesystem::remove(path);
+    std::remove(path.c_str());
 }
 
 }  // namespace

@@ -3,6 +3,8 @@
 # Папки сборки CMake
 build/
 out/
+bin/
+obj/
 cmake-build-*/
 
 # Скомпилированные файлы

@@ -1,21 +1,13 @@
 @echo off
-rem Сборка и запуск сервера заказа воды на Windows.
-rem Нужны CMake и компилятор C++ (Visual Studio 2019+ или MinGW-w64 из MSYS2).
+rem Запуск сервера заказа воды. Если сервер ещё не собран, сначала собирает его.
 chcp 65001 > nul
 cd /d "%~dp0"
 
-cmake -S . -B build || goto :error
-cmake --build build --config Release || goto :error
-
-if exist build\Release\water_server.exe (
-    build\Release\water_server.exe %*
-) else (
-    build\water_server.exe %*
+if not exist water_server.exe (
+    call build.bat || exit /b 1
 )
-goto :eof
 
-:error
-echo.
-echo Сборка не удалась. Проверьте, что установлены CMake и компилятор C++.
-pause
-exit /b 1
+start "Сервер заказа воды" water_server.exe %*
+rem Даём серверу секунду на запуск и открываем сайт в браузере.
+timeout /t 1 /nobreak > nul
+start "" http://localhost:8080/

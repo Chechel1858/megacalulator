@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  cmake:
     strategy:
       fail-fast: false
       matrix:
@@ -35,3 +35,53 @@ jobs:
             -H 'Content-Type: application/json' \
             -d "{\"customer_name\":\"Тест\",\"phone\":\"+79001234567\",\"address\":\"ул. Тестовая, 1\",\"delivery_date\":\"$(date +%F)\",\"items\":[{\"product_id\":1,\"quantity\":2}]}"
           curl --fail -s http://localhost:8080/api/orders/1
+
+  # Способы сборки на Windows без CMake: проект Visual Studio и build.bat.
+  windows-no-cmake:
+    strategy:
+      fail-fast: false
+      matrix:
+        method: [visual-studio, build-bat-msvc, build-bat-gcc]
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: microsoft/setup-msbuild@v2
+        if: matrix.method == 'visual-studio'
+
+      - name: Сборка проекта Visual Studio
+        if: matrix.method == 'visual-studio'
+        run: msbuild WaterOrderSystem.sln /p:Configuration=Release /p:Platform=x64 /m
+
+      - name: Сборка build.bat (Visual Studio)
+        if: matrix.method == 'build-bat-msvc'
+        shell: cmd
+        run: call build.bat msvc
+
+      - name: Сборка build.bat (MinGW)
+        if: matrix.method == 'build-bat-gcc'
+        shell: cmd
+        run: call build.bat gcc
+
+      - name: Проверка работы сервера
+        shell: pwsh
+        run: |
+          $exe = if (Test-Path bin\Release\water_server.exe) { 'bin\Release\water_server.exe' } else { 'water_server.exe' }
+          $server = Start-Process -FilePath $exe -ArgumentList '--port', '8080', '--data', 'orders-ci.json' -PassThru
+          Start-Sleep -Seconds 2
+          $health = Invoke-RestMethod http://localhost:8080/api/health
+          if ($health.status -ne 'ok') { throw 'Сервер не отвечает' }
+          Invoke-WebRequest http://localhost:8080/ -UseBasicParsing | Out-Null
+          $body = @{
+            customer_name = 'Тест'; phone = '+79001234567'; address = 'ул. Тестовая, 1'
+            delivery_date = (Get-Date -Format 'yyyy-MM-dd'); items = @(@{ product_id = 1; quantity = 2 })
+          } | ConvertTo-Json
+          $order = Invoke-RestMethod http://localhost:8080/api/orders -Method Post `
+            -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body))
+          if ($order.total -ne 700) { throw "Неверная сумма заказа: $($order.total)" }
+          # Второй заказ проверяет, что файл заказов перезаписывается на Windows.
+          $order = Invoke-RestMethod http://localhost:8080/api/orders -Method Post `
+            -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body))
+          if ($order.id -ne 2) { throw "Неверный номер заказа: $($order.id)" }
+          Stop-Process $server

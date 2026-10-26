@@ -1,6 +1,8 @@
 # Единые окончания строк в репозитории, на Windows git сам переведёт их в CRLF.
 * text=auto
 *.bat text eol=crlf
+*.sln text eol=crlf
+*.vcxproj text eol=crlf
 
 *.png binary
 

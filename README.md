@@ -11,7 +11,7 @@
 
 | № | Пункт задания | Где в проекте |
 |---|---|---|
-| 1 | Создание репозитория и структуры | Этот репозиторий, [структура](#структура-проекта), `CMakeLists.txt`, `.gitignore` |
+| 1 | Создание репозитория и структуры | Этот репозиторий, [структура](#структура-проекта), `.gitignore`, `build.bat`, проект Visual Studio |
 | 2 | Подключение библиотеки HTTP | `third_party/httplib.h` (cpp-httplib), подключается в `server/api.hpp` |
 | 3 | Разработка сервера | `server/`: REST API, проверка заказов, хранение в `orders.json` |
 | 4 | Разработка клиента | `client/`: сайт клиента `index.html` и панель оператора `admin.html` |
@@ -42,8 +42,10 @@
 
 ```
 megacalulator/
-├── CMakeLists.txt          — сборка проекта
-├── run.bat                 — сборка и запуск на Windows одним кликом
+├── run.bat                 — запуск на Windows одним кликом (соберёт, если нужно)
+├── build.bat               — сборка без CMake (Visual Studio или MinGW)
+├── WaterOrderSystem.sln    — проект Visual Studio (+ water_server.vcxproj)
+├── CMakeLists.txt          — сборка через CMake (необязательно)
 ├── server/                 — C++ сервер
 │   ├── main.cpp            — точка входа: параметры запуска, старт сервера
 │   ├── api.hpp/.cpp        — HTTP-маршруты (REST API)
@@ -67,46 +69,63 @@ megacalulator/
 
 ## Сборка и запуск
 
-Нужен компилятор с поддержкой C++17 и [CMake](https://cmake.org/download/) 3.14 или новее.
-На Windows подойдёт **Visual Studio 2019/2022** (компонент «Разработка классических приложений на C++»)
-или **MinGW-w64** из [MSYS2](https://www.msys2.org/). Нужна Windows 10 или новее.
+**CMake и права администратора не нужны.** Нужен любой компилятор C++17:
+Visual Studio 2019/2022 или MinGW-w64 (подойдёт и MinGW из Code::Blocks 20.03 и новее). Нужна Windows 10 или новее.
 
-### Способ 1. Одной командой (Windows)
+### Способ 1. Двойной щелчок по `run.bat`
 
-Дважды щёлкните `run.bat` или выполните его в cmd из папки проекта:
+`run.bat` сам соберёт сервер (если `water_server.exe` ещё нет), запустит его в отдельном окне
+и откроет сайт в браузере. Для пересборки после изменений кода запустите `build.bat`.
 
-```cmd
-run.bat
-```
-
-Скрипт соберёт проект и запустит сервер. Затем откройте в браузере http://localhost:8080
-
-### Способ 2. Через cmd и CMake
+`build.bat` сам ищет компилятор: Visual Studio, MinGW в `PATH`, MSYS2, Code::Blocks
+или распакованный рядом w64devkit. Компилятор можно указать явно:
 
 ```cmd
-cd /d C:\путь\к\megacalulator
-cmake -S . -B build
-cmake --build build --config Release
-build\Release\water_server.exe
+build.bat msvc
+build.bat gcc
 ```
 
-Если вы собираете через MinGW, exe будет лежать в `build\water_server.exe`.
+### Способ 2. Visual Studio
 
-### Способ 3. Visual Studio
+Откройте `WaterOrderSystem.sln` и нажмите **F5** (или ▶ «Локальный отладчик Windows»).
+Проект настроен под Visual Studio 2022. Если у вас 2019, при открытии согласитесь на
+предложение «Изменить целевую платформу» (Retarget).
 
-`Файл → Открыть → Папка…` → выберите папку проекта. Visual Studio сама найдёт `CMakeLists.txt`.
-Выберите цель запуска `water_server.exe` и нажмите ▶.
+### Если компилятора нет совсем
 
-### Способ 4. Только g++ (без CMake)
+Без прав администратора подойдёт портативный [w64devkit](https://github.com/skeeto/w64devkit/releases):
+скачайте `w64devkit-x64-….7z.exe` (самораспаковывающийся архив), распакуйте папку `w64devkit` прямо в папку
+проекта и запустите `run.bat`. Устанавливать ничего не нужно.
+
+### Вручную одной командой
+
+Visual Studio (в «Developer Command Prompt for VS»):
+
+```cmd
+cl /EHsc /std:c++17 /O2 /utf-8 /Iserver /Ithird_party /D_WIN32_WINNT=0x0A00 /DNOMINMAX ^
+   server\main.cpp server\api.cpp server\catalog.cpp server\order.cpp server\order_store.cpp ^
+   /Fe:water_server.exe /link ws2_32.lib
+```
+
+MinGW:
 
 ```cmd
 g++ -std=c++17 -O2 -Iserver -Ithird_party -D_WIN32_WINNT=0x0A00 ^
     server/main.cpp server/api.cpp server/catalog.cpp server/order.cpp server/order_store.cpp ^
-    -o water_server.exe -lws2_32
-water_server.exe
+    -o water_server.exe -lws2_32 -static
 ```
 
-На Linux/macOS вместо `-D_WIN32_WINNT=0x0A00 ... -lws2_32` укажите `-pthread`.
+На Linux/macOS вместо `-D_WIN32_WINNT=0x0A00 ... -lws2_32 -static` укажите `-pthread`.
+
+### CMake (необязательно)
+
+Если CMake всё-таки есть:
+
+```cmd
+cmake -S . -B build
+cmake --build build --config Release
+ctest --test-dir build -C Release
+```
 
 ### Параметры запуска
 
@@ -119,12 +138,6 @@ water_server [--port 8080] [--client папка_сайта] [--data orders.json]
 | `--port` | `8080` | порт сервера |
 | `--client` | ищется автоматически | папка с сайтом клиента |
 | `--data` | `orders.json` | файл, в котором хранятся заказы |
-
-### Тесты
-
-```cmd
-ctest --test-dir build -C Release --output-on-failure
-```
 
 ## REST API
 

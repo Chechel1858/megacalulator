@@ -4,7 +4,7 @@
 // Запуск: water_server [--port 8080] [--client путь/к/client] [--data orders.json]
 
 #include <cstdlib>
-#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <string>
 
@@ -17,8 +17,6 @@
 #include "api.hpp"
 #include "catalog.hpp"
 #include "order_store.hpp"
-
-namespace fs = std::filesystem;
 
 namespace {
 
@@ -63,15 +61,18 @@ bool parse_options(int argc, char** argv, Options& options) {
     return true;
 }
 
+bool file_exists(const std::string& path) { return std::ifstream(path).good(); }
+
 // Ищет папку с сайтом: рядом с текущей папкой, выше по дереву (если сервер
-// запущен из build/ или build/Debug) и рядом с исполняемым файлом.
-std::string find_client_dir(const char* argv0) {
-    std::error_code ec;
-    const fs::path exe_dir = fs::absolute(argv0, ec).parent_path();
-    for (const fs::path& candidate :
-         {fs::path("client"), fs::path("../client"), fs::path("../../client"), exe_dir / "client"}) {
-        if (fs::exists(candidate / "index.html", ec)) {
-            return candidate.string();
+// запущен из build/ или bin/Debug) и рядом с исполняемым файлом.
+std::string find_client_dir(const std::string& argv0) {
+    const auto slash = argv0.find_last_of("/\\");
+    const std::string exe_dir = slash == std::string::npos ? "." : argv0.substr(0, slash);
+    for (const std::string& candidate :
+         {std::string("client"), std::string("../client"), std::string("../../client"),
+          exe_dir + "/client"}) {
+        if (file_exists(candidate + "/index.html")) {
+            return candidate;
         }
     }
     return {};
