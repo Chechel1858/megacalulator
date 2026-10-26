@@ -15,7 +15,7 @@
 | 2 | Подключение библиотеки HTTP | `third_party/httplib.h` (cpp-httplib), подключается в `server/api.hpp` |
 | 3 | Разработка сервера | `server/`: REST API, проверка заказов, хранение в `orders.json` |
 | 4 | Разработка клиента | `client/`: сайт клиента `index.html` и панель оператора `admin.html` |
-| 5 | +1 балл: две диаграммы | [`docs/diagrams.md`](docs/diagrams.md): диаграмма последовательности и диаграмма классов |
+| 5 | +1 балл: две диаграммы | `docs/sequence.drawio` и `docs/classes.drawio` (draw.io + PNG), см. [диаграммы](#диаграммы) |
 | — | Use case и тест-кейсы | [`docs/use-case.drawio`](docs/use-case.drawio), [`docs/test-cases.docx`](docs/test-cases.docx) |
 
 ## Возможности
@@ -180,16 +180,19 @@ curl -X PATCH http://localhost:8080/api/orders/1/status -d "{\"status\":\"delive
 
 ## Диаграммы
 
-В [`docs/diagrams.md`](docs/diagrams.md) лежат две диаграммы, GitHub показывает их прямо на странице:
+Все диаграммы лежат в `docs/` в формате **draw.io**. Они открываются на [app.diagrams.net](https://app.diagrams.net/)
+через «Файл → Открыть», прав администратора для этого не нужно. Рядом лежат PNG-картинки для отчёта.
 
-1. **Диаграмма последовательности.** Как проходит заказ: сайт → сервер → проверка → хранилище → файл, и как оператор меняет статус.
-2. **Диаграмма классов.** Классы сервера (`Catalog`, `Product`, `Order`, `OrderItem`, `OrderStatus`, `OrderStore`) и их связи.
+| Диаграмма | Что показывает | Файлы |
+|---|---|---|
+| Use Case | что могут делать клиент и оператор | [`use-case.drawio`](docs/use-case.drawio), [`use-case.png`](docs/use-case.png) |
+| Последовательность | путь заказа: сайт → сервер → проверка → хранилище → файл, смена статуса оператором | [`sequence.drawio`](docs/sequence.drawio), [`sequence.png`](docs/sequence.png) |
+| Классы | классы сервера (`Catalog`, `Product`, `Order`, `OrderItem`, `OrderStatus`, `OrderStore`) и их связи | [`classes.drawio`](docs/classes.drawio), [`classes.png`](docs/classes.png) |
 
-Картинки для отчёта: `docs/sequence.png` и `docs/classes.png`.
+Диаграммы последовательности и классов также есть на Mermaid в [`docs/diagrams.md`](docs/diagrams.md),
+там GitHub показывает их прямо на странице.
 
-Также в `docs/` лежат:
-- [`use-case.drawio`](docs/use-case.drawio): диаграмма вариантов использования (Use Case) для клиента и оператора. Открывается в [draw.io](https://app.diagrams.net/) через «Файл → Открыть»;
-- [`test-cases.docx`](docs/test-cases.docx): тест-кейсы в Word (6 штук, все пройдены).
+Тест-кейсы: [`docs/test-cases.docx`](docs/test-cases.docx) (Word, 6 штук, все пройдены).
 
 ![Панель оператора](docs/screenshot-admin.png)
 

@@ -1,7 +1,15 @@
 # Диаграммы системы заказа воды
 
-Диаграммы написаны на [Mermaid](https://mermaid.js.org/). GitHub рисует их прямо на этой странице.
-Те же диаграммы в виде картинок (например, для отчёта): `sequence.svg`/`sequence.png` и `classes.svg`/`classes.png`.
+Все диаграммы есть в формате **draw.io**: их можно открыть и редактировать на [app.diagrams.net](https://app.diagrams.net/)
+через «Файл → Открыть» или в приложении draw.io.
+
+| Диаграмма | draw.io | Картинка |
+|---|---|---|
+| Варианты использования (Use Case) | [`use-case.drawio`](use-case.drawio) | [`use-case.png`](use-case.png) |
+| Последовательность | [`sequence.drawio`](sequence.drawio) | [`sequence.png`](sequence.png) |
+| Классы | [`classes.drawio`](classes.drawio) | [`classes.png`](classes.png) |
+
+Ниже те же диаграммы последовательности и классов на [Mermaid](https://mermaid.js.org/), GitHub рисует их прямо на этой странице.
 
 ## 1. Диаграмма последовательности: оформление заказа
 
