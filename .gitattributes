@@ -1,0 +1,8 @@
+# Единые окончания строк в репозитории, на Windows git сам переведёт их в CRLF.
+* text=auto
+*.bat text eol=crlf
+
+*.png binary
+
+# Сторонние библиотеки не учитываются в статистике языков на GitHub.
+third_party/** linguist-vendored

@@ -1,0 +1,37 @@
+# .gitignore говорит git, какие файлы НЕ надо добавлять в репозиторий.
+
+# Папки сборки CMake
+build/
+out/
+cmake-build-*/
+
+# Скомпилированные файлы
+*.exe
+*.o
+*.obj
+*.a
+*.lib
+*.dll
+*.so
+*.pdb
+*.ilk
+*.exp
+
+# Visual Studio / VS Code / CLion
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+x64/
+Debug/
+Release/
+CMakeUserPresets.json
+
+# Данные, которые создаёт работающий сервер
+orders.json
+orders.json.tmp
+
+# Системные файлы
+.DS_Store
+Thumbs.db

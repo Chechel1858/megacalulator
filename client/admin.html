@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Чистая вода — панель оператора</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="header">
+    <div class="container header__inner">
+        <a class="logo" href="/">💧 Чистая вода</a>
+        <nav class="nav">
+            <a href="/">Сайт клиента</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <section class="section">
+        <div class="admin__header">
+            <h1>Заказы</h1>
+            <button id="refresh" class="button" type="button">Обновить</button>
+        </div>
+        <p class="muted">Список обновляется автоматически каждые 10 секунд.</p>
+        <div id="admin-error" class="alert alert--error" hidden></div>
+        <div class="table-wrapper">
+            <table class="orders">
+                <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Создан</th>
+                    <th>Клиент</th>
+                    <th>Адрес</th>
+                    <th>Доставка</th>
+                    <th>Состав</th>
+                    <th>Сумма</th>
+                    <th>Статус</th>
+                </tr>
+                </thead>
+                <tbody id="orders"></tbody>
+            </table>
+        </div>
+        <p id="no-orders" class="muted" hidden>Заказов пока нет.</p>
+    </section>
+</main>
+
+<script src="common.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

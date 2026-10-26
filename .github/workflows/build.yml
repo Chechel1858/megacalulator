@@ -1,0 +1,37 @@
+name: Сборка и тесты
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Настройка CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Сборка
+        run: cmake --build build --config Release
+
+      - name: Модульные тесты
+        run: ctest --test-dir build -C Release --output-on-failure
+
+      - name: Проверка работы сервера
+        if: runner.os == 'Linux'
+        run: |
+          ./build/water_server --port 8080 --data /tmp/orders.json &
+          sleep 1
+          curl --fail -s http://localhost:8080/api/health
+          curl --fail -s http://localhost:8080/ > /dev/null
+          curl --fail -s -X POST http://localhost:8080/api/orders \
+            -H 'Content-Type: application/json' \
+            -d "{\"customer_name\":\"Тест\",\"phone\":\"+79001234567\",\"address\":\"ул. Тестовая, 1\",\"delivery_date\":\"$(date +%F)\",\"items\":[{\"product_id\":1,\"quantity\":2}]}"
+          curl --fail -s http://localhost:8080/api/orders/1
