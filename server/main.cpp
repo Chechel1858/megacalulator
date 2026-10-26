@@ -103,11 +103,26 @@ int main(int argc, char** argv) {
         water::OrderStore store(options.data_file);
 
         httplib::Server server;
+#ifndef _WIN32
+        // По умолчанию cpp-httplib включает SO_REUSEPORT, и второй запущенный сервер
+        // молча занимает тот же порт. Оставляем только SO_REUSEADDR, чтобы второй
+        // запуск получал ошибку «порт занят».
+        server.set_socket_options([](socket_t sock) {
+            int yes = 1;
+            setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes));
+        });
+#endif
         if (!server.set_mount_point("/", options.client_dir)) {
             std::cerr << "Не удалось открыть папку сайта: " << options.client_dir << "\n";
             return 1;
         }
         water::register_routes(server, catalog, store);
+
+        if (!server.bind_to_port("0.0.0.0", options.port)) {
+            std::cerr << "Не удалось запустить сервер на порту " << options.port
+                      << " (возможно, порт уже занят)\n";
+            return 1;
+        }
 
         std::cout << "Сервер заказа воды запущен\n"
                   << "  Сайт клиента:     http://localhost:" << options.port << "/\n"
@@ -115,9 +130,8 @@ int main(int argc, char** argv) {
                   << "  Заказы хранятся в файле: " << options.data_file << "\n"
                   << "Для остановки нажмите Ctrl+C" << std::endl;
 
-        if (!server.listen("0.0.0.0", options.port)) {
-            std::cerr << "Не удалось запустить сервер на порту " << options.port
-                      << " (возможно, порт уже занят)\n";
+        if (!server.listen_after_bind()) {
+            std::cerr << "Сервер остановлен из-за ошибки\n";
             return 1;
         }
     } catch (const std::exception& e) {

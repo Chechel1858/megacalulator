@@ -16,6 +16,7 @@
 | 3 | Разработка сервера | `server/`: REST API, проверка заказов, хранение в `orders.json` |
 | 4 | Разработка клиента | `client/`: сайт клиента `index.html` и панель оператора `admin.html` |
 | 5 | +1 балл: две диаграммы | [`docs/diagrams.md`](docs/diagrams.md): диаграмма последовательности и диаграмма классов |
+| — | Use case и тест-кейсы | [`docs/use-case.drawio`](docs/use-case.drawio), [`docs/test-cases.docx`](docs/test-cases.docx) |
 
 ## Возможности
 
@@ -172,6 +173,10 @@ curl -X PATCH http://localhost:8080/api/orders/1/status -d "{\"status\":\"delive
 2. **Диаграмма классов.** Классы сервера (`Catalog`, `Product`, `Order`, `OrderItem`, `OrderStatus`, `OrderStore`) и их связи.
 
 Картинки для отчёта: `docs/sequence.png` и `docs/classes.png`.
+
+Также в `docs/` лежат:
+- [`use-case.drawio`](docs/use-case.drawio): диаграмма вариантов использования (Use Case) для клиента и оператора. Открывается в [draw.io](https://app.diagrams.net/) через «Файл → Открыть»;
+- [`test-cases.docx`](docs/test-cases.docx): тест-кейсы в Word (6 штук, все пройдены).
 
 ![Панель оператора](docs/screenshot-admin.png)
 

@@ -1,0 +1,76 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="use-case" name="Use Case">
+    <mxGraphModel dx="1000" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="boundary" value="Система заказа воды" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=16;fillColor=#f5f9ff;strokeColor=#6c8ebf;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="170" y="20" width="680" height="640" as="geometry"/>
+        </mxCell>
+        <mxCell id="client" value="Клиент" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="270" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="operator" value="Оператор" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="930" y="480" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc1" value="Просмотреть каталог воды" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="200" y="70" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc2" value="Добавить товары в корзину" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="200" y="165" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc3" value="Оформить заказ" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="200" y="290" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc7" value="Проверить статус заказа" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="200" y="490" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc4" value="Указать данные доставки (имя, телефон, адрес, дату)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="450" y="190" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc5" value="Проверить корректность данных" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="450" y="290" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc6" value="Показать ошибки ввода" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="450" y="390" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc8" value="Просмотреть список заказов" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="640" y="490" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc9" value="Изменить статус заказа" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="640" y="580" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="" style="endArrow=none;html=1;rounded=0;strokeWidth=1.5;" edge="1" parent="1" source="client" target="uc1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="" style="endArrow=none;html=1;rounded=0;strokeWidth=1.5;" edge="1" parent="1" source="client" target="uc2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="" style="endArrow=none;html=1;rounded=0;strokeWidth=1.5;" edge="1" parent="1" source="client" target="uc3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="" style="endArrow=none;html=1;rounded=0;strokeWidth=1.5;" edge="1" parent="1" source="client" target="uc7">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="" style="endArrow=none;html=1;rounded=0;strokeWidth=1.5;" edge="1" parent="1" source="operator" target="uc8">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="" style="endArrow=none;html=1;rounded=0;strokeWidth=1.5;" edge="1" parent="1" source="operator" target="uc9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="«include»" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="uc3" target="uc4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="«include»" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="uc3" target="uc5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" value="«extend»" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="uc6" target="uc3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" value="«include»" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="uc9" target="uc8">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
